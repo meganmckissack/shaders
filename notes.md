@@ -12,4 +12,39 @@ _Data that doesn't change between vertices (like the mesh position or a color) i
 
 _We can send data from the vertex shader to the fragment shader using varying._
 
+glsl requires types for variables - float, int, bool
 
+vec2 - store values like two coordinates(x, y) properties
+- vec2 foo = vec2(1.0, 2.0);
+- multiplication etc operates on both properties
+
+vec3 - store three properties like (x, y, z) or (r, g, b)
+- vec3 bar = vec3(1.0, 2.0, 3.0);
+
+can write functions 
+```
+  float loremIpsum()
+{
+    float a = 1.0;
+    float b = 2.0;
+
+    return a + b;
+}
+```
+
+If the function isn't supposed to return anything, we set the type to void:
+```
+void justDoingStuff()
+{
+    float a = 1.0;
+    float b = 2.0;
+}
+```
+
+We can specify parameters, but we also have to provide their type:
+```
+float add(float a, float b)
+{
+    return a + b;
+}
+```
