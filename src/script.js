@@ -8,8 +8,7 @@ import testFragmentShader from './shaders/test/fragment.glsl'
 /**
  * Base
  */
-// Debug
-const gui = new dat.GUI()
+
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -20,13 +19,15 @@ const scene = new THREE.Scene()
 /**
  * Textures
  */
-const textureLoader = new THREE.TextureLoader()
+const textureLoader = new THREE.TextureLoader();
+const waterTexture = textureLoader.load('/textures/water-texture.png')
 
 /**
  * Test mesh
  */
 // Geometry
 const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
+
 // const count = geometry.attributes.position.count
 // const randoms = new Float32Array(count);
 
@@ -36,17 +37,26 @@ const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
 
 //good practice to prefix with a for "attribute" - aRandom
 // geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1));
-
+console.log(geometry.attributes.uv)
 // Material
 const material = new THREE.RawShaderMaterial({
     vertexShader: testVertexShader,
     fragmentShader: testFragmentShader,
     // wireframe: true
-    transparent: true
+    // transparent: true
+    uniforms: 
+    {
+        // uFrequency: { value: 10 }
+        uFrequency: { value: new THREE.Vector2(10, 5) },
+        uTime: { value: 0 },
+        uColor: { value: new THREE.Color("hsl(166, 73%, 62%)") },
+        uTexture: { value: waterTexture }
+    }
 });
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
+// mesh.scale.y = 2 / 3;
 scene.add(mesh)
 
 /**
@@ -102,6 +112,9 @@ const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
 
+    //update material
+    material.uniforms.uTime.value = elapsedTime;
+
     // Update controls
     controls.update()
 
@@ -113,3 +126,16 @@ const tick = () =>
 }
 
 tick()
+
+// Debug
+const gui = new dat.GUI();
+gui.add(material.uniforms.uFrequency.value, 'x')
+.min(0)
+.max(20)
+.step(0.01)
+.name('frequencyX')
+gui.add(material.uniforms.uFrequency.value, 'y')
+.min(0)
+.max(20)
+.step(0.01)
+.name('frequencyY')
